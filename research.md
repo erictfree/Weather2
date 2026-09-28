@@ -74,6 +74,40 @@ Record the selected weather provider, forecast range, recommendation categories 
 
 Once the recommendation categories are chosen, estimate the art needed: the character, three outfit variations per category, weather icons, and reminder icons. Use that estimate to choose the artwork approach.
 
+- **Weather provider**: Open-Meteo (see rationale above). Forecast range: current conditions plus forecast days available through Open-Meteo (covers same-day and trip-planning use cases).
+
+- **Recommendation categories** (temperature-driven, three tiers):
+
+  | Category | Range | Basis |
+  |---|---|---|
+  | Cold | ≤50°F, or wind chill applies (≤50°F + wind >3mph) | NWS wind chill guidance |
+  | Mild | 51–74°F | between cold and hot cutoffs |
+  | Hot | ≥75°F | — |
+
+- **Reminders** (independent of category, layered as icon + text on top of whichever outfit is shown — not separate outfits):
+  - Umbrella — triggered by forecast precipitation (Open-Meteo precipitation probability/weather code)
+  - Sunscreen — triggered by UV index ≥3 (EPA moderate-and-above)
+  - Hydration — triggered by heat index ≥90°F (NWS extreme-caution-and-above)
+
+  Trade-off: early wireframes (`reference/art/rain.jpg`) drew a full separate rain outfit (raincoat, boots). Decision: keep this simpler — the character keeps its temperature-tier outfit and reminders layer on as icon/text only, avoiding extra art states. Those wireframes are treated as superseded layout sketches, not the final interaction model.
+
+- **Screen structure**:
+  - Main screen: location entry (manual + device location) and today/forecast date navigation, current conditions summary, character with outfit and written recommendation, reminder banners, and entry points to the Fashion Show and Credits/Info screens.
+  - Credits/Info screen (modal or separate screen): creator, weather-data source, recommendation methods/sources, privacy practices, and art credits/licenses.
+  - **Phone layout**: single-column stack (per existing wireframes), optimized for one-handed use.
+  - **Laptop layout**: not a stretched copy of the phone layout — character and recommendation stay as a left-hand focal column; location/date controls, conditions card, and reminders are arranged as separate panels in a row to the right, all visible without scrolling.
+  - Hand-drawn phone and laptop screens still need to be produced for `spec.md`; the wireframes in `reference/art/` so far are phone-only and predate the reminder-layering decision above.
+
+- **Visual direction**: existing hand-drawn/notebook-style wireframes (`reference/art/`) are layout wireframes only, not the final visual style. Final visual style to be defined in `spec.md` once art is produced.
+
+- **Artwork approach**: AI-generated, unedited. Estimate: 1 character + 3 outfit variations × 3 categories (9 outfit states) + weather icons (clear, rain, and any other conditions surfaced) + reminder icons (umbrella, sunscreen, hydration). Trade-off accepted: per the Copyright Office research above, purely AI-generated art without meaningful human creative input is not copyrightable in the US; for this prototype, disclosure in the Credits/Info screen is sufficient and no exclusive ownership claim over the art is required.
+
+- **Deployment method**: GitHub Pages, per the brief's recommendation.
+
+- **Additional feature (research-justified)**: Fashion Show — previews all three outfit variations for the current category without changing the persisted selection for the viewed date. Justified by user story 2 (wanting variety to feel present despite a small wardrobe): this lets the user see the range of variations directly rather than only encountering them by chance.
+
+- **Bonus feature (outside required scope)**: "I feel 80s today" — a fun, Back to the Future-styled outfit easter egg. Not the brief's required additional feature; kept as an extra if time allows.
+
 ### Backlog (not in current scope)
 
 - Push notifications for umbrella/sunscreen reminders (out of scope for this browser-based app; in-app reminders on the recommendation screen satisfy the brief instead).

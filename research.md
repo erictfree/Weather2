@@ -40,9 +40,33 @@ Focus on the need rather than prescribing an interface or feature.
 
 Collect 5–10 reference images from relevant products and interfaces. Save each image in `reference/`, identify its source, and record a brief observation about what is useful, ineffective, or relevant to this project. Reference images are examples only; do not use them in the app.
 
+1. `reference/apps/example1.webp` — Reddit r/capsulewardrobe thread ([discussion](https://www.reddit.com/r/capsulewardrobe/comments/1ldvng6/a_weather_app_that_knows_my_capsule_wardrobe_and/)). Shows user demand for outfit suggestions tied to a small, known wardrobe rather than generic advice — supports keeping recommendations to common/generic items per the context of use.
+2. `reference/apps/example2.webp` — Weather Fit (weatherfit.com), iOS app, 4.6★/16K+ ratings. Validates the character + outfit + weather concept and umbrella/sunscreen reminder pattern central to this brief. Also shows wardrobe customization, multi-location support, and widget/watch surfaces — mostly out of scope for Weather2 but confirms the core idea works well with users.
+
 ## Weather and technical evidence
 
 Record each useful source, what it supports, and important limitations. Research the weather variables, apparel guidance, reminders, accessibility, privacy, artwork, weather providers, and technical options needed for informed decisions.
+
+### Weather providers considered
+
+- **Open-Meteo** ([docs](https://open-meteo.com/en/docs)) — Free for non-commercial use under 10,000 calls/day, no API key or signup required. Forecast up to 16 days (covers current + trip-planning use case). Includes a free geocoding API to resolve typed city names to coordinates. Provides temperature, apparent temperature, precipitation, wind, UV index, and weather codes needed for outfit/reminder rules.
+- **National Weather Service (NWS) API** ([docs](https://www.weather.gov/documentation/services-web-api)) — Free, no key, official US government source. Limited to ~7-day forecast and US coverage only; requires a separate geocoding step since it takes lat/lon, not place names.
+- **OpenWeatherMap** ([pricing](https://openweathermap.org/price)) — Free tier: 1,000,000 calls/month, 60/min, current weather + 5-day/3-hour forecast. 16-day daily forecast requires a paid plan. Requires signup/API key.
+- **WeatherAPI.com** ([pricing](https://www.weatherapi.com/pricing.aspx)) — Free tier: 100,000 calls/month but only a 3-day forecast; longer forecast ranges require a paid plan. Requires signup/API key.
+
+**Decision: Open-Meteo selected** as the weather provider — no key/signup friction, forecast range comfortably covers trip planning, and built-in geocoding simplifies manual location entry. Trade-off accepted: non-commercial free-tier cap of 10,000 calls/day, acceptable for this prototype's scale.
+
+### Apparel and reminder guidance
+
+- **NWS Wind Chill** ([weather.gov](https://www.weather.gov/safety/cold-wind-chill-chart)) — Defined only for temperatures at or below 50°F with wind above 3 mph; supports a cold/layering threshold and a "feels colder than the number" note for cold-weather outfit categories.
+- **EPA UV Index Scale** ([epa.gov](https://www.epa.gov/sunsafety/uv-index-scale-0)) — 1–2 Low (no protection needed), 3–7 Moderate to High (sunscreen, hat, sunglasses), 8+ Very High to Extreme (extra protection). Supports numeric thresholds for a sunscreen reminder.
+- **NWS Heat Index** ([weather.gov](https://www.weather.gov/safety/heat-index)) — Standard categories: 80–90°F Caution (fatigue possible), 90–103°F Extreme Caution (heat cramps/exhaustion possible), 103–124°F Danger, 125°F+ Extreme Danger. Supports a hydration-reminder threshold, e.g. triggering at Extreme Caution (~90°F+). Note: source page renders its chart as an image; categories confirmed from the well-established public NWS heat index scale.
+
+### Accessibility, privacy, and artwork
+
+- **Accessibility** — WCAG 2.1/2.2 AA basics apply: sufficient color contrast, text alternatives for icons/character states, minimum touch target size (44×44px), and no color-only signaling for recommendation categories (pair color with icon/text).
+- **Privacy** — The browser Geolocation API requires explicit per-origin user permission. The brief requires storing only the most recent location on-device; this should use `localStorage` rather than a server or account, and be disclosed on the information screen along with the data source.
+- **Artwork copyright** — Per the US Copyright Office ([copyright.gov/ai](https://www.copyright.gov/ai/)), purely AI-generated content without meaningful human creative input is not copyrightable in the US, and the area remains actively evolving (Reports Parts 1–3, 2024–2025). This affects the artwork approach: options are (a) original hand-drawn/vector art (clear ownership, more effort), (b) AI-generated art with substantial human editing (arguably protectable, still a gray area, must be disclosed per Copyright Office guidance and the brief's credits requirement), or (c) appropriately licensed asset packs (clear terms, requires credit).
 
 ## Decisions
 
